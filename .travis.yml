@@ -9,5 +9,5 @@ matrix:
         - pip3 install -U pip
         - pip3 install -U pytest
         - pip3 install -r requirements.txt
-      script: pytest
+      script: python3 -m pytest
       after_success: python 3 -m codecov
