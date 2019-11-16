@@ -4,3 +4,5 @@ matplotlib
 flask
 tqdm
 boto3
+torch
+torchvision
