@@ -6,3 +6,7 @@ tqdm
 boto3
 torch
 torchvision
+pytest-flask
+flask_restplus
+flask_cors
+simplejson
