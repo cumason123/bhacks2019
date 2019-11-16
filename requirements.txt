@@ -1,11 +1,6 @@
 pytest
-sphinx
-sphinx-gallery==0.3.1
-tqdm
 numpy
 matplotlib
-torch
-torchvision
-torchtext
-boto3
 flask
+tqdm
+boto3
