@@ -1,7 +1,16 @@
 import sys
 sys.path.append('./src')
-from routes import *
 
+from flask import Flask, jsonify, request, Response, render_template
+import sys
+import simplejson as json
+# Flask Setup
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+    
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         if 'p' in sys.argv:
