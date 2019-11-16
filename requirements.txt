@@ -1,4 +1,2 @@
 numpy
 pytest
-torch 
-torchvision 
