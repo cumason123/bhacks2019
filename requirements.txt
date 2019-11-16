@@ -1,4 +1,14 @@
-numpy
 pytest
+sphinx
+sphinx-gallery==0.3.1
+tqdm
+numpy
+matplotlib
 torch
 torchvision
+torchtext
+torchaudio
+PyHamcrest
+bs4
+awscli==1.16.35
+flask
