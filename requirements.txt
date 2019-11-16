@@ -7,8 +7,5 @@ matplotlib
 torch
 torchvision
 torchtext
-torchaudio
-PyHamcrest
-bs4
-awscli==1.16.35
+boto3
 flask
