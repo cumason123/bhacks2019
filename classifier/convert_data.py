@@ -6,6 +6,7 @@ import pandas as pd
 from tqdm import tqdm
 
 if __name__ == '__main__':
+    np.random.seed(0)
 
     valid_split = 0.1
     test_split = 0.1

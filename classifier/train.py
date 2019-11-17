@@ -1,6 +1,7 @@
 import argparse
 import copy
 import time
+import os
 
 import torch
 import torch.nn as nn
@@ -8,13 +9,13 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data.dataloader import DataLoader
 
-from classifier.data import split, load_dataset
+from classifier.data import load_dataset
 from classifier.model import Resnet
 
 
 def parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data-folder', default='formatted_data')
+    parser.add_argument('--data-folder', default='balanced_data')
     parser.add_argument('--epochs', type=int, default=1000)
     parser.add_argument('--freeze-weights', action='store_true')
     parser.add_argument('--num-classes', type=int, default=10)
@@ -93,8 +94,9 @@ def train_model(model, loss_function, optimizer, scheduler, dataloaders, device,
 
 
 def train(args):
-    dataset = load_dataset(args.data_folder)
-    train_dataset, valid_dataset, test_dataset = split(dataset)
+    train_dataset = load_dataset(os.path.join(args.data_folder, 'train'), 'train')
+    valid_dataset = load_dataset(os.path.join(args.data_folder, 'validation'), 'validation')
+
     train_loader = DataLoader(train_dataset, shuffle=True)
     valid_loader = DataLoader(train_dataset, shuffle=True)
 
@@ -122,4 +124,3 @@ def train(args):
     device = torch.device('cuda:0')
 
     train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_size, args.epochs)
-
