@@ -1,6 +1,6 @@
 import os
 import cv2
-from flask import Flask, flash, request, redirect, url_for
+from flask import Flask, flash, request, redirect, url_for, Response
 from werkzeug.utils import secure_filename
 import numpy as np
 
@@ -28,18 +28,17 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            npimg = np.fromstring(filename.read(), np.uint8)
-            # convert numpy array to image
-            img = cv2.imdecode(npimg, cv2.CV_LOAD_IMAGE_UNCHANGED)
+            print(type(file))
+            filestr = file.read()
+            # convert string data to numpy array
+            data = np.frombuffer(filestr, np.uint8)
+
+            img = cv2.imdecode(data, cv2.IMREAD_COLOR)
             print(img.shape)
-            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # print("path: ", os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            # pic = cv2.imread(path, mode='RGB')
-            # print(pic.shape)
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            # convert numpy array to image
+            # img = cv2.imdecode(npimg, )
+
+            return Response({"Hello":"hi"}, status=200, mimetype="application/json")
             
     return '''
     <!doctype html>
