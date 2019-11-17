@@ -474,3 +474,8 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/node,java,linux,macos,python,pycharm,windows,eclipse,virtualenv
 
+
+data/
+formatted_data/
+balanced_data/
+trained_models/

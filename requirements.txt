@@ -11,5 +11,7 @@ pytest-flask
 flask_restplus
 flask_cors
 simplejson
+pandas
+tqdm
 opencv-python
 
