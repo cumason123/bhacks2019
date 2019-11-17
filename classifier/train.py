@@ -9,14 +9,14 @@ import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data.dataloader import DataLoader
 
 from classifier.data import split, load_dataset
-from classifier.model import *
+from classifier.model import Resnet
 
 
 def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data-folder', default='formatted_data')
     parser.add_argument('--epochs', type=int, default=1000)
-    parser.add_argument('--freeze-weights', action='store-true')
+    parser.add_argument('--freeze-weights', action='store_true')
     parser.add_argument('--num-classes', type=int, default=10)
     parser.add_argument('--learning-rate', type=int, default=1e-3)
     parser.add_argument('--optimizer', type=str, default='adam', choices=['adam', 'sgd'])
@@ -123,6 +123,3 @@ def train(args):
 
     train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_size, args.epochs)
 
-
-if __name__ == '__main__':
-    train(parse())
