@@ -1,10 +1,29 @@
 import numpy as np
 import torch
+from torchvision import transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import Subset
 
 
+
+
+
+
 def load_dataset(data_folder):
+    train = transforms.Compose([
+        transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+
+    val = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+
     image_dataset = ImageFolder(data_folder)
     return image_dataset
 
