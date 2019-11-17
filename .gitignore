@@ -478,3 +478,4 @@ pip-selfcheck.json
 data/
 formatted_data/
 balanced_data/
+trained_models/
