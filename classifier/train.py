@@ -8,6 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data.dataloader import DataLoader
+from tqdm import tqdm
 
 from classifier.data import load_dataset
 from classifier.model import Resnet
@@ -21,6 +22,10 @@ def parse():
     parser.add_argument('--num-classes', type=int, default=10)
     parser.add_argument('--learning-rate', type=int, default=1e-3)
     parser.add_argument('--optimizer', type=str, default='adam', choices=['adam', 'sgd'])
+    parser.add_argument('--batch-size', type=int, default=16)
+    parser.add_argument('--num-workers', type=int, default=4)
+    parser.add_argument('--save-dir', type=str, default='trained_models')
+    parser.add_argument('--model-file', type=str, default='model.pt')
     return parser.parse_args()
 
 
@@ -45,7 +50,8 @@ def train_model(model, loss_function, optimizer, scheduler, dataloaders, device,
             running_corrects = 0
 
             # Iterate over data.
-            for inputs, labels in dataloaders[phase]:
+            pbar = tqdm(dataloaders[phase])
+            for inputs, labels in pbar:
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
@@ -97,10 +103,12 @@ def train(args):
     train_dataset = load_dataset(os.path.join(args.data_folder, 'train'), 'train')
     valid_dataset = load_dataset(os.path.join(args.data_folder, 'validation'), 'validation')
 
-    train_loader = DataLoader(train_dataset, shuffle=True)
-    valid_loader = DataLoader(train_dataset, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers,
+                              pin_memory=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers,
+                              pin_memory=True)
 
-    model = Resnet(args.num_classes)
+    model = Resnet(len(train_dataset.classes))
     dataloaders = {
         'train': train_loader,
         'val': valid_loader
@@ -121,6 +129,10 @@ def train(args):
 
     scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-    device = torch.device('cuda:0')
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
-    train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_size, args.epochs)
+    model = train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_size, args.epochs)
+
+    if not os.path.exists(args.save_dir):
+        os.makedirs(args.save_dir)
+    model.save(os.path.join(args.save_dir, args.model_file))
