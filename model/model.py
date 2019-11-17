@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchvision.models.resnet import resnet18
 
 
 def build_model(num_classes, model_function):
@@ -10,7 +11,6 @@ def build_model(num_classes, model_function):
 
 
 class Model(nn.Module):
-
     def save(self, path):
         torch.save(self.state_dict(), path)
 
@@ -19,10 +19,14 @@ class Model(nn.Module):
 
 
 class TransferModel(Model):
-
     def __init__(self, pretrained_model_function, num_classes):
         super().__init__()
         self.model = build_model(num_classes, pretrained_model_function)
 
     def forward(self, x):
         return self.model(x)
+
+
+class Resnet(TransferModel):
+    def __init__(self, num_classes):
+        super().__init__(resnet18, num_classes)
