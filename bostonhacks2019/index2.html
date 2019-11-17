@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Croppie - a simple javascript image cropper - Foliotek</title>
+
+    <meta name="description" content="Croppie is an easy to use javascript image cropper.">
+
+    <meta property="og:title" content="Croppie - a javascript image cropper">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://foliotek.github.io/Croppie">
+    <meta property="og:description" content="Croppie is an easy to use javascript image cropper.">
+    <meta property="og:image" content="https://foliotek.github.io/Croppie/demo/hero.png">
+
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,700' rel='stylesheet' type='text/css'>
+    <link rel="Stylesheet" type="text/css" href="demo/prism.css" />
+    <link rel="Stylesheet" type="text/css" href="bower_components/sweetalert/dist/sweetalert.css" />
+    <link rel="Stylesheet" type="text/css" href="croppie.css" />
+    <link rel="Stylesheet" type="text/css" href="demo/demo.css" />
+    <link rel="icon" href="//foliotek.github.io/favico-64.png" />
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="assets/css/Navigation-with-Search.css">
+    <link rel="stylesheet" href="assets/css/smoothproducts.css">
+</head>
+<body>
+<main class="page landing-page">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-search">
+        <div class="container"><a class="navbar-brand" href="#">Company Name</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                 id="navcol-1">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">How it Works</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">About Us</a></li>
+                </ul>
+                <form class="form-inline mr-auto" target="_self">
+                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div>
+                </form><a class="btn btn-light action-button" role="button" href="#" style="background-color: rgb(20,145,223);font-size: 12.8;">Upload Image</a></div>
+        </div>
+    </nav>
+    <section class="clean-block clean-hero" style="background-image:url(&quot;assets/img/tech/image4.jpg&quot;);color:rgba(9, 162, 255, 0.85);">
+        <div class="text">
+            <h2>Lorem ipsum dolor sit amet.</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo.</p>
+            <section>
+                <div class="col-1-2">
+                    <div id="demo-basic" style="display: none"></div>
+                </div>
+                <div>
+                    <div class="container">
+                        <div class="grid">
+                            <div class="col-1-2">
+                                <div id="vanilla-demo" style="display: none"></div>
+                            </div>
+                            <div class="actions">
+                                <button class="vanilla-result" style="display: none"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="container">
+                        <div class="grid">
+                            <div class="col-1-2">
+                                <div class="actions">
+                                    <button class="resizer-result" style="display: none">Result</button>
+                                </div>
+                            </div>
+                            <div class="col-1-2">
+                                <div id="resizer-demo" style="display: none"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="upload-demo">
+                    <div class="container">
+                        <div class="grid">
+                            <div class="upload-msg">
+                                Upload a file to start cropping
+                            </div>
+                            <div class="upload-demo-wrap">
+                                <div id="upload-demo"></div>
+                            </div>
+                            <div class="actions">
+                                <a class="btn file-btn">
+                                    Upload
+                                    <input type="file" id="upload" value="Choose a file" accept="image/*" />
+                                </a>
+                                <form action="#" method="post">
+                                    <button class="upload-result" type="submit">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+</main>
+
+<footer>
+    Copyright &copy; <span id="year">2017</span> | Foliotek
+</footer>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="bower_components/jquery/dist/jquery.min.js"><\/script>')</script>
+<script src="demo/prism.js"></script>
+<script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
+
+<script src="croppie.js"></script>
+<script src="demo/demo.js"></script>
+<script src="bower_components/exif-js/exif.js"></script>
+<script>
+    document.getElementById('year').innerHTML = (new Date).getFullYear();
+    Demo.init();
+</script>
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+        function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-2398527-4');ga('send','pageview');
+</script>
+</body>
+</html>
