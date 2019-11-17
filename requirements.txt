@@ -10,3 +10,4 @@ pytest-flask
 flask_restplus
 flask_cors
 simplejson
+opencv-python
