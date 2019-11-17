@@ -1,36 +1,25 @@
 import argparse
 import copy
-import time
 import os
+import time
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
+import torchvision.models.resnet as resnet
 from torch.utils.data.dataloader import DataLoader
 from tqdm import tqdm
 
 from classifier.data import load_dataset
-from classifier.model import Resnet
+from classifier.model import TransferModel
 
 
-def parse():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--data-folder', default='balanced_data')
-    parser.add_argument('--epochs', type=int, default=1000)
-    parser.add_argument('--freeze-weights', action='store_true')
-    parser.add_argument('--num-classes', type=int, default=10)
-    parser.add_argument('--learning-rate', type=int, default=1e-3)
-    parser.add_argument('--optimizer', type=str, default='adam', choices=['adam', 'sgd'])
-    parser.add_argument('--batch-size', type=int, default=16)
-    parser.add_argument('--num-workers', type=int, default=4)
-    parser.add_argument('--save-dir', type=str, default='trained_models')
-    parser.add_argument('--model-file', type=str, default='model.pt')
-    return parser.parse_args()
-
-
-def train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_sizes, num_epochs=25):
+def train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_sizes, args, num_epochs=25):
     since = time.time()
+
+    eval_interval = 10
+    model.to(device)
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
@@ -44,6 +33,8 @@ def train_model(model, loss_function, optimizer, scheduler, dataloaders, device,
             if phase == 'train':
                 model.train()  # Set classifier to training mode
             else:
+                if not (epoch - eval_interval + 1) % eval_interval == 0:
+                    continue
                 model.eval()  # Set classifier to evaluate mode
 
             running_loss = 0.0
@@ -87,6 +78,8 @@ def train_model(model, loss_function, optimizer, scheduler, dataloaders, device,
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
 
+                model.save(os.path.join(args.save_dir, args.model_file))
+
         print()
 
     time_elapsed = time.time() - since
@@ -108,7 +101,12 @@ def train(args):
     valid_loader = DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers,
                               pin_memory=True)
 
-    model = Resnet(len(train_dataset.classes))
+    if hasattr(resnet, args.pretrained_model):
+        model_cls = getattr(resnet, args.pretrained_model)
+    else:
+        raise ModuleNotFoundError
+
+    model = TransferModel(model_cls, len(train_dataset.classes))
     dataloaders = {
         'train': train_loader,
         'val': valid_loader
@@ -131,8 +129,14 @@ def train(args):
 
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
-    model = train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_size, args.epochs)
+    if torch.cuda.device_count() > 1:
+        print('using data parallel')
+        model = nn.DataParallel(model)
 
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
+
+    model = train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_size, args,
+                        args.epochs)
+
     model.save(os.path.join(args.save_dir, args.model_file))
