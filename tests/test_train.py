@@ -1,5 +1,5 @@
-from model.train import *
-from model.model import Resnet
+from classifier.train import *
+from classifier.model import Resnet
 
 
 def test_build_model():

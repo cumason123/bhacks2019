@@ -1,6 +1,6 @@
 import os
 
-from model.data import load_dataset, split
+from classifier.data import load_dataset, split
 
 data_folder = 'formatted_data'
 
