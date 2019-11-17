@@ -3,6 +3,7 @@ numpy
 matplotlib
 flask
 tqdm
+python-dateutil==2.8.0
 boto3
 torch
 torchvision
@@ -11,3 +12,4 @@ flask_restplus
 flask_cors
 simplejson
 opencv-python
+
