@@ -139,4 +139,4 @@ def train(args):
     model = train_model(model, loss_function, optimizer, scheduler, dataloaders, device, dataset_size, args,
                         args.epochs)
 
-    model.save(os.path.join(args.save_dir, args.model_file))
+    model.save(os.path.join(args.save_dir, args.pretrained_model + '_' + args.model_file))
