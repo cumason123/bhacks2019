@@ -1,7 +1,8 @@
 import os
 from shutil import copyfile
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 if __name__ == '__main__':
@@ -18,18 +19,23 @@ if __name__ == '__main__':
 
     classes = metadata['dx'].unique()
 
-    metadata['split'] = ''
+    metadata['split'] = 'nothing'
 
     for class_name in classes:
-        count = len(metadata.loc[metadata['dx'] == class_name])
+        locations = metadata.loc[metadata['dx'] == class_name, 'split']
+        count = len(locations)
 
-        splits = ['train'] * int(count * (1 - test_split - valid_split)) + \
-                 ['validation'] * int(count * valid_split) + \
-                 ['test'] * int(count * test_split)
+        num_val = int(count * valid_split)
+        num_test = int(count * test_split)
+        num_train = count - num_val - num_test
+
+        splits = ['train'] * num_train + \
+                 ['validation'] * num_val + \
+                 ['test'] * num_test
 
         np.random.shuffle(splits)
 
-        metadata.loc[metadata['dx'] == class_name]['path'] = splits
+        metadata.loc[metadata['dx'] == class_name, 'split'] = splits
 
     for split_folder in ['train', 'validation', 'test']:
         for class_name in classes:
@@ -47,48 +53,3 @@ if __name__ == '__main__':
             copyfile(source_file, destination_file)
         except FileNotFoundError:
             print('Could not copy file', source_file, 'to', destination_file)
-
-    # for class_name in classes:
-    #     path = os.path.join(destination_folder, class_name)
-    #     if not os.path.exists(path):
-    #         os.makedirs(path)
-    #
-    # for i, row in tqdm(metadata.iterrows(), total=len(metadata)):
-    #     file_name = row['image_id'] + '.jpg'
-    #     classification = row['dx']
-    #     source_file = os.path.join(image_folder, file_name)
-    #     destination_file = os.path.join(destination_folder, classification, file_name)
-    #     try:
-    #         copyfile(source_file, destination_file)
-    #     except FileNotFoundError:
-    #         print('Could not copy file', source_file, 'to', destination_file)
-    #
-    # for folder in ['train', 'validation', 'test']:
-    #     split_folder = os.path.join(destination_folder, folder)
-    #     if not os.path.exists(split_folder):
-    #         os.makedirs(split_folder)
-    #
-    # for class_name in os.listdir(destination_folder):
-    #     class_folder = os.path.join(destination_folder, class_name)
-    #     dst_class_folder = os.path.join(destination_folder, split_folder, class_name)
-    #     files = os.listdir(class_folder)
-    #     count = len(files)
-    #     i = int((1 - valid_split - test_split) * count)
-    #     j = int((1 - test_split) * count)
-    #
-    #     np.random.shuffle(files)
-    #     for index, file in enumerate(files):
-    #         if index < i:
-    #             split_folder = 'train'
-    #         elif index < j:
-    #             split_folder = 'validation'
-    #         else:
-    #             split_folder = 'test'
-    #
-    #         if not os.path.exists(dst_class_folder):
-    #             os.makedirs(dst_class_folder)
-    #
-    #         src_path = os.path.join(class_folder, file)
-    #         dst_path = os.path.join(dst_class_folder, file)
-    #
-    #         os.rename(src_path, dst_path)
