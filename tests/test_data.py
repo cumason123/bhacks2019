@@ -1,15 +1,10 @@
 import os
 
-from classifier.data import load_dataset, split
+from classifier.data import load_dataset
 
-data_folder = 'formatted_data'
+DATA_FOLDER = 'balanced_data'
 
 
 def test_load_dataset():
-    if os.path.exists(data_folder):
-        dataset = load_dataset(data_folder)
-
-
-def test_split():
-    if os.path.exists(data_folder):
-        train, valid, test = split(load_dataset(data_folder))
+    if os.path.exists(DATA_FOLDER):
+        dataset = load_dataset(DATA_FOLDER)

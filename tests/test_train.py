@@ -1,4 +1,5 @@
-from classifier.train import *
+import torch
+
 from classifier.model import Resnet
 
 
