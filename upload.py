@@ -4,6 +4,8 @@ from flask import Flask, flash, request, redirect, url_for, Response
 from werkzeug.utils import secure_filename
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 UPLOAD_FOLDER = '/mnt/d/BHacks2019'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -34,9 +36,12 @@ def upload_file():
             data = np.frombuffer(filestr, np.uint8)
 
             img = cv2.imdecode(data, cv2.IMREAD_COLOR)
-            print(img.shape)
-            # convert numpy array to image
-            # img = cv2.imdecode(npimg, )
+
+            reshaped_img = cv2.resize(img, (224, 224))
+            reshaped_img = cv2.cvtColor(reshaped_img, cv2.COLOR_BGR2RGB)
+
+            print(img.shape, reshaped_img.shape)
+            # RETURN RESHAPED IMAGE!
 
             return Response({"Hello":"hi"}, status=200, mimetype="application/json")
             
